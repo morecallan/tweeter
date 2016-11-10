@@ -10,5 +10,7 @@ namespace Tweeter.DAL
     public class TweeterContext : ApplicationDbContext
     {
         public virtual DbSet<Tweet> Tweets { get; set; }
+        public virtual DbSet<Twit> Twits { get; set; }
+
     }
 }
