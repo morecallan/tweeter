@@ -31,7 +31,6 @@ app.controller('Register', function ($scope, $q, $http) {
 app.controller('HomePage', function ($scope, $q, $http) {
 
     $scope.tweetPosted = function () {
-        console.log("tweet posted")
         $scope.ListAllTweets();
     }
 
@@ -41,6 +40,7 @@ app.controller('HomePage', function ($scope, $q, $http) {
         return $q(function (resolve, reject) {
             $http.get(url).then(function (response) {
                 $scope.userName = response.data;
+                $scope.checkToSeeIfUserIsFollowing(response.data);
                 resolve(response.data)
             }, function (error) {
                 reject(error)
@@ -49,9 +49,23 @@ app.controller('HomePage', function ($scope, $q, $http) {
     }
     $scope.getUsername();
 
+    $scope.checkToSeeIfUserIsFollowing = function(username) {
+        var url = `/api/Tweeter/?username=${username}`
+
+        return $q(function (resolve, reject) {
+            $http.get(url).then(function (response) {
+                console.log(response)
+                $scope.userIsFollowing = response.data;
+                resolve(response.data)
+            }, function (error) {
+                reject(error)
+            })
+        })
+    }
+    
+
     $scope.ListAllTweets = function () {
         var url = `/api/Tweet`
-
         return $q(function (resolve, reject) {
             $http.get(url).then(function (response) {
                 console.log(response)
@@ -63,4 +77,41 @@ app.controller('HomePage', function ($scope, $q, $http) {
             })
         })
     }
+
+    $scope.followUser = function () {
+        var url = `/api/Tweeter`
+        var data = {};
+        data.userToFollow = $scope.userName;
+        data.alreadyFollowing = $scope.userIsFollowing;
+
+        return $q(function (resolve, reject) {
+            $http.post(url, data).then(function (response) {
+                $scope.checkToSeeIfUserIsFollowing();
+                resolve(response);
+            }, function (error) {
+                reject(error)
+            })
+        })
+    }
+
+    $scope.unfollowUser = function () {
+        var url = `/api/Tweeter`
+        var data = {};
+        data.userToFollow = "frog";
+        data.alreadyFollowing = $scope.userIsFollowing;
+
+        return $q(function (resolve, reject) {
+            $http.post(url, data).then(function (response) {
+                $scope.checkToSeeIfUserIsFollowing();
+                resolve(response);
+            }, function (error) {
+                reject(error)
+            })
+        })
+    }
+
+    $scope.ListAllTweets().then((tweets) => {
+        console.log(tweets)
+        $scope.tweets = tweets
+    });
 })
