@@ -50,6 +50,13 @@ namespace Tweeter.DAL
 
         }
 
+        public Twit GetTwitBasedOnUserName(string username)
+        {
+            ApplicationUser found_user = UserManager.Users.FirstOrDefault(u => u.UserName == username);
+            Twit found_twit = Context.TweeterUsers.FirstOrDefault(t => t.BaseUserId == found_user.Id);
+            return found_twit;
+        }
+
 
         public List<string> GetAllUsernames()
         {
