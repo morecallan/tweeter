@@ -97,7 +97,7 @@ app.controller('HomePage', function ($scope, $q, $http) {
     $scope.unfollowUser = function () {
         var url = `/api/Tweeter`
         var data = {};
-        data.userToFollow = "frog";
+        data.userToFollow = $scope.userName;
         data.alreadyFollowing = $scope.userIsFollowing;
 
         return $q(function (resolve, reject) {
